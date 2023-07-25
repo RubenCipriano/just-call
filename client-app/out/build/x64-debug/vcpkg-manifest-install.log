@@ -1,0 +1,15 @@
+Detectando hash do compilador para tripleto x64-windows...
+Todos os pacotes solicitados estão instalados no momento.
+Tempo total de instalação: 300 ns
+glfw3 fornece destinos CMake:
+
+    # isso é gerado heuristicamente e pode não estar correto
+    find_package(glfw3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE glfw)
+
+imgui fornece destinos CMake:
+
+    # isso é gerado heuristicamente e pode não estar correto
+    find_package(imgui CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE imgui::imgui)
+
