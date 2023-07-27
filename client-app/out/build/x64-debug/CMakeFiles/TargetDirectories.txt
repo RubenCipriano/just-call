@@ -1,5 +1,0 @@
-E:/Projetos/just-call/client-app/out/build/x64-debug/CMakeFiles/edit_cache.dir
-E:/Projetos/just-call/client-app/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
-E:/Projetos/just-call/client-app/out/build/x64-debug/client-app/CMakeFiles/client-app.dir
-E:/Projetos/just-call/client-app/out/build/x64-debug/client-app/CMakeFiles/edit_cache.dir
-E:/Projetos/just-call/client-app/out/build/x64-debug/client-app/CMakeFiles/rebuild_cache.dir
