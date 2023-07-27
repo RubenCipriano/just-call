@@ -1,14 +1,32 @@
 {
-    "configurations": [{
-      "name": "x86-Debug",
+  "configurations": [
+    {
+      "name": "x86-Debug-Windows",
       "generator": "Visual Studio 15 2017",
-      "configurationType" : "Debug",
-      "buildRoot":  "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+      "configurationType": "Debug",
+      "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-m -v:minimal",
-      "variables": [{
-        "name": "CMAKE_TOOLCHAIN_FILE",
-        "value": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
-      }]
-    }]
-  }
+      "variables": [
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        }
+      ]
+    },
+    {
+      "name": "x86-Debug-Linux",
+      "generator": "Unix Makefiles",
+      "configurationType": "Debug",
+      "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-m -v",
+      "variables": [
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "/caminho/para/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        }
+      ]
+    }
+  ]
+}

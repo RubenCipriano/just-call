@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(just-call)
 
 find_package(imgui CONFIG REQUIRED)
+
 find_package(glfw3 CONFIG REQUIRED)
 
 set(SOURCES src/main.cpp src/network.h src/utils.h)
