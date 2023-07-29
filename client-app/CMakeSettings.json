@@ -16,7 +16,7 @@
     },
     {
       "name": "x86-Debug-Linux",
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "configurationType": "Debug",
       "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
       "cmakeCommandArgs": "",
@@ -24,7 +24,15 @@
       "variables": [
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "/caminho/para/vcpkg/scripts/buildsystems/vcpkg.cmake"
+          "value": "/home/rub1/Documentos/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        },
+        {
+          "name": "CMAKE_C_COMPILER",
+          "value": "gcc"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER",
+          "value": "g++"
         }
       ]
     }
