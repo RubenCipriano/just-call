@@ -2,5 +2,5 @@
 
 mkdir -p build
 cd build
-cmake .. "-DCMAKE_TOOLCHAIN_FILE=/caminho/para/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake .. -G Ninja "-DCMAKE_TOOLCHAIN_FILE=/home/rub1/Documentos/vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build .
