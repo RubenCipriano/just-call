@@ -1,15 +1,35 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include <thread>
+#include <condition_variable>
+#include <mutex>
 
 #ifdef _WIN32
-#include <winsock2.h> // For sockets on Windows
-#pragma comment(lib, "ws2_32.lib") // Link with the Winsock library
+    #include <winsock2.h> // For sockets on Windows
+    #pragma comment(lib, "ws2_32.lib") // Link with the Winsock library
 #else
-#include <unistd.h> // For close() on Unix
-#include <arpa/inet.h> // For inet_addr() on Unix
-#include <sys/socket.h> // For socket functions on Unix
+    #include <unistd.h> // For close() on Unix
+    #include <arpa/inet.h> // For inet_addr() on Unix
+    #include <sys/socket.h> // For socket functions on Unix
 #endif
+
+enum MessageType {
+    Message = 1,
+    Audio = 2,
+    Joined = 4,
+    Leaved = 8
+};
+
+typedef struct Message {
+    MessageType type;
+    char value[1024];
+};
+
+typedef struct client {
+    int socket;
+    char username[32];
+};
 
 int server_connect(char* url, char* port) {
     int portInt = atoi(port);
@@ -55,9 +75,7 @@ int server_connect(char* url, char* port) {
     return clientSocket;
 }
 
-bool sendData(int clientSocket, const char *data) {
-    int dataLength = strlen(data);
-
+bool sendData(int clientSocket, const char *data, int dataLength) {
     int status = send(clientSocket, data, dataLength, 0);
 
     if (status == -1)
@@ -65,6 +83,22 @@ bool sendData(int clientSocket, const char *data) {
     return true;
 }
 
-bool sendAudioData(float audioData) {
-    return true;
+// Função para serializar a estrutura Message em um buffer de bytes
+void serializeClient(const struct client* message, char* buffer) {
+    memcpy(buffer, message, sizeof(struct client));
+}
+
+// Função para desserializar um buffer de bytes para a estrutura Message
+void deserializeClient(const char* buffer, struct client* message) {
+    memcpy(message, buffer, sizeof(struct client));
+}
+
+// Função para serializar a estrutura Message em um buffer de bytes
+void serializeMessage(const struct Message* message, char* buffer) {
+    memcpy(buffer, message, sizeof(struct Message));
+}
+
+// Função para desserializar um buffer de bytes para a estrutura Message
+void deserializeMessage(const char* buffer, struct Message* message) {
+    memcpy(message, buffer, sizeof(struct Message));
 }

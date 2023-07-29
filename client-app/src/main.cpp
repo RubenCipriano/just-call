@@ -4,39 +4,11 @@
 // Variáveis para controlar a janela de conexão
 bool showConnectWindow = false;
 
-void connectForm(char ipUrlInput[], char portInput[], char usernameInput[], char channelId[]) {
-    // Set the size of the secondary viewport
-    ImGui::SetNextWindowSize(ImVec2(connectWindowWidth, connectWindowHeight));
+// Variavel para controlar as pessoas
+bool showPersons = false;
 
-    // Renderizar a interface do viewport de conexão aqui
-    ImGui::Begin("Connect", &showConnectWindow);
-
-    // Input boxes para o IP/URL e porta
-    ImGui::Text("IP/URL:");
-    ImGui::SameLine();
-    ImGui::InputText("##ipUrl", ipUrlInput, URL_LEN - 1);
-
-    ImGui::Text("Port:");
-    ImGui::SameLine();
-    ImGui::InputText("##port", portInput, PORT_LEN - 1, ImGuiInputTextFlags_CharsDecimal);
-
-    ImGui::Text("Channel Id:");
-    ImGui::SameLine();
-    ImGui::InputText("##Channel Id", channelId, CHANNEL_LEN - 1, ImGuiInputTextFlags_CharsDecimal);
-
-    // Input box para o nome de usuário
-    ImGui::Text("Username:");
-    ImGui::InputText("##username", usernameInput, USERNAME_LEN - 1);
-
-    if (ImGui::Button("Connect")) {
-        printf("ENTROU!");
-        int client_socket = server_connect(ipUrlInput, portInput);
-        sendData(client_socket, channelId);
-        sendData(client_socket, usernameInput);
-    }
-
-    ImGui::End();
-}
+// Running Receive Data
+bool running = true;
 
 int main() {
     // Inicialização do GLFW e criação da janela principal
@@ -59,6 +31,16 @@ int main() {
     char portInput[PORT_LEN] = "";
     char usernameInput[USERNAME_LEN] = "";
     char channelId[CHANNEL_LEN] = "";
+
+    // Client Socket
+    int client_socket = -1;
+
+    // receive data thread
+    std::thread receive_data_thread;
+
+    // Receove Mutex
+    std::condition_variable cv;
+    std::mutex cv_mutex;
 
     // Loop principal
     while (!glfwWindowShouldClose(window)) {
@@ -94,7 +76,33 @@ int main() {
 
         // Renderização do viewport de conexão (se aberto)
         if (showConnectWindow) {
-            connectForm(ipUrlInput, portInput, usernameInput, channelId);
+            client_socket = connectForm(ipUrlInput, portInput, usernameInput, channelId, &showConnectWindow);
+
+            if (client_socket != -1) {
+
+                showConnectWindow = false;
+
+                showPersons = true;
+            }
+        }
+
+        if (showPersons) {
+            showPersonsWindow(client_socket, windowWidth, windowHeight);
+
+            // Stop the previous communication thread if it exists and is joinable
+            if (receive_data_thread.joinable()) {
+
+                running = false; // Signal the thread to stop
+
+                receive_data_thread.join(); // Wait for the thread to finish
+            }
+
+            // Start the communication thread before entering showPersonsWindow
+            running = true; // Set running to true before starting the thread
+
+            receive_data_thread = std::thread([&]() {
+                receiveData(client_socket, &running, &cv, &cv_mutex);
+            });
         }
 
         // Renderização da janela principal
