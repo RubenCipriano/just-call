@@ -4,6 +4,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
+#include "models.h"
 
 #ifdef _WIN32
     #include <winsock2.h> // For sockets on Windows
@@ -13,23 +14,6 @@
     #include <arpa/inet.h> // For inet_addr() on Unix
     #include <sys/socket.h> // For socket functions on Unix
 #endif
-
-enum MessageType {
-    Message = 1,
-    Audio = 2,
-    Joined = 4,
-    Leaved = 8
-};
-
-typedef struct Message {
-    MessageType type;
-    char value[1024];
-};
-
-typedef struct client {
-    int socket;
-    char username[32];
-};
 
 int server_connect(char* url, char* port) {
     int portInt = atoi(port);
@@ -84,13 +68,24 @@ bool sendData(int clientSocket, const char *data, int dataLength) {
 }
 
 // Função para serializar a estrutura Message em um buffer de bytes
-void serializeClient(const struct client* message, char* buffer) {
-    memcpy(buffer, message, sizeof(struct client));
+void serializeClient(const struct Client* message, char* buffer) {
+    memcpy(buffer, message, sizeof(struct Client));
 }
 
 // Função para desserializar um buffer de bytes para a estrutura Message
-void deserializeClient(const char* buffer, struct client* message) {
-    memcpy(message, buffer, sizeof(struct client));
+void deserializeClient(const char* buffer, struct Client* client) {
+    memcpy(client, buffer, sizeof(struct Client));
+}
+
+// Função para desserializar um buffer de bytes para a estrutura Message
+void deserializeClients(const char* buffer, struct Client* clients, int num_clients) {
+    int size_of_struct = sizeof(struct Client);
+
+    for (int i = 0; i < num_clients; i++) {
+        int offset = size_of_struct * i;
+
+        memcpy(clients + i, buffer + offset, sizeof(struct Client));
+    }
 }
 
 // Função para serializar a estrutura Message em um buffer de bytes

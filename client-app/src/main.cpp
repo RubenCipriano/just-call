@@ -10,27 +10,39 @@ bool showPersons = false;
 // Running Receive Data
 bool running = true;
 
+// Variaveis de input
+char ipUrlInput[URL_LEN] = "";
+
+// Variaveis de input
+char portInput[PORT_LEN] = "";
+
+// Variaveis de input
+char usernameInput[USERNAME_LEN] = "";
+
+// Variaveis de input
+char channelId[CHANNEL_LEN] = "";
+
 int main() {
+
     // Inicialização do GLFW e criação da janela principal
     glfwInit();
+
     GLFWwindow* window = glfwCreateWindow(800, 600, "JustCall", NULL, NULL);
+
     glfwMakeContextCurrent(window);
 
     glfwSwapInterval(1); // Ativar V-Sync
 
     // Inicialização do ImGui com OpenGL
     IMGUI_CHECKVERSION();
+
     ImGui::CreateContext();
+
     ImGuiIO& io = ImGui::GetIO();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
 
-    // Variáveis para armazenar o IP/URL, porta e nome de usuário
-    char ipUrlInput[URL_LEN] = "";
-    char portInput[PORT_LEN] = "";
-    char usernameInput[USERNAME_LEN] = "";
-    char channelId[CHANNEL_LEN] = "";
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     // Client Socket
     int client_socket = -1;
@@ -44,35 +56,20 @@ int main() {
 
     // Loop principal
     while (!glfwWindowShouldClose(window)) {
+
         ImGui_ImplOpenGL3_NewFrame();
+
         ImGui_ImplGlfw_NewFrame();
+
         ImGui::NewFrame();
 
         // Obter tamanho da janela principal
         int windowWidth, windowHeight;
+
         glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-        // Definir a posição e tamanho da janela principal
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
-
-        // Criar janela principal (top bar fixa, sem título)
-        ImGui::Begin("Only for ImGuiRe", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus);
-
-        // Barra superior
-        if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("General")) {
-                // Botão "Conectar" na barra superior
-                if (ImGui::MenuItem("Conectar")) {
-                    // Abrir o viewport de conexão
-                    showConnectWindow = true;
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
-
-        ImGui::End(); // Fim da janela principal
+        // Top bar
+        topBar(windowWidth, windowHeight, &showConnectWindow);
 
         // Renderização do viewport de conexão (se aberto)
         if (showConnectWindow) {
@@ -105,6 +102,8 @@ int main() {
             });
         }
 
+
+
         // Renderização da janela principal
         glfwMakeContextCurrent(window);
 
@@ -116,14 +115,23 @@ int main() {
 
         glfwSwapBuffers(window);
 
-        glfwPollEvents();
+        glfwWaitEvents();
+    }
+
+    if (receive_data_thread.joinable()) {
+        running = false; // Sinaliza o thread para parar a execução
+        receive_data_thread.join(); // Aguarda o thread terminar
     }
 
     // Limpeza
     ImGui_ImplOpenGL3_Shutdown();
+
     ImGui_ImplGlfw_Shutdown();
+
     ImGui::DestroyContext();
+
     glfwDestroyWindow(window);
+
     glfwTerminate();
 
     return 0;
