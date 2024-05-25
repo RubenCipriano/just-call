@@ -1,0 +1,7 @@
+<div class="slidebar" *ngIf="channels != null">
+    <channel *ngFor="let channel of channels" [channel]="channel" (channelClicked)="onChannelClicked($event)"></channel>
+</div>
+
+<div class="slidebar" *ngIf="persons != null">
+    <person *ngFor="let person of persons" [person]="person"></person>
+</div>

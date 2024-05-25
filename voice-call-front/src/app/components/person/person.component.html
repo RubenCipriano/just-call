@@ -1,0 +1,17 @@
+<div class="person">
+    <img [src]="person.picture" *ngIf="person.picture != null && !person.text_form">
+
+    <div class="text-form row" *ngIf="person.text_form">
+        <div class="col-6">
+            <div class="image-border">
+                <img [src]="person.picture" *ngIf="person.picture != null">
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row name">
+                {{person.nick_name}}
+                {{person.description}}
+            </div>
+        </div>
+    </div>
+</div>

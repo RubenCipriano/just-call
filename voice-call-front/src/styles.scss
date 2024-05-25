@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+:root {
+    --background-dark-color: #444;
+    --background-super-dark-color: #222;
+    --foreground-white-color: #ddd;
+}
+
+html, body, app-root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-super-dark-color);
+}
+
+.row, .col, .col-1, .col-2, .fa-microphone {
+    padding: 0 !important;
+    margin: 0 !important;
+}

@@ -1,0 +1,37 @@
+:host, .channel, .channel > * {
+    width: 100%;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.channel {
+    border-radius: 25px;
+    margin-top: 5px;
+    font-size: 20px;
+    transition: all 0.5s;
+
+    * {
+        padding: 2.5px 5px !important;
+    }
+}
+
+.col-1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.channel:hover {
+    background-color: #222;
+}
+
+.fa-microphone {
+    font-size: 15px;
+}
+
+.capsule-length, .capsule-length:hover {
+    background-color: #333;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 25px;
+}
